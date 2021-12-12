@@ -33,7 +33,7 @@ class FilmOwnerRelation
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="filmOwnerRelation")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"film:read", "film:write"})
+//     * @Groups({"film"})
      * @Assert\Valid()
      */
     private $owner;

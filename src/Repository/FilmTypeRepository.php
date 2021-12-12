@@ -25,6 +25,7 @@ class FilmTypeRepository extends ServiceEntityRepository
             return $this->createQueryBuilder('f')
                 ->andWhere('f.name = :name')
                 ->setParameter('name', $name)
+                ->addOrderBy()
                 ->getQuery()
                 ->getSingleResult()
                 ;

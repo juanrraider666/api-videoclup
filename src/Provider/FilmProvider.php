@@ -21,7 +21,12 @@ class FilmProvider
        $this->filmRepository = $filmRepository;
    }
 
-    public function getById(string $id)
+    public function getById(int $id)
+    {
+        $film = $this->filmRepository->find($id);
+        return $film;
+    }
+    public function getByIdString(string $id)
     {
         $film = $this->filmRepository->find(Uuid::fromString($id));
         if (!$film) {
@@ -33,6 +38,6 @@ class FilmProvider
 
     public function getByType(FilmType $type)
     {
-        return $this->filmRepository->findOneBy(['filmType' => $type]);
+        return $this->filmRepository->findBy(['filmType' => $type]);
     }
 }

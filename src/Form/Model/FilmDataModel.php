@@ -5,10 +5,22 @@ namespace App\Form\Model;
 
 
 use App\Entity\Film;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class FilmDataModel
 {
+    /**
+     * @var null
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min=2,
+     *     max=50,
+     *     maxMessage="Describe your film in 50 chars or less"
+     * )
+     */
     public $title = null;
+
+
     public $description = null;
     public $price = null;
 

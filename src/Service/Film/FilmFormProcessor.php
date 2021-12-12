@@ -9,6 +9,7 @@ use App\Form\FilmFormType;
 use App\Form\Model\FilmDataModel;
 use App\Provider\FilmProvider;
 use App\Repository\FilmRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,12 +28,14 @@ class FilmFormProcessor
      * @var FilmProvider
      */
     private $filmProvider;
+    private  $entityManager;
 
-    public function __construct(FormFactoryInterface $formFactory, FilmRepository $filmRepository, FilmProvider $filmProvider)
+    public function __construct(FormFactoryInterface $formFactory, FilmRepository $filmRepository, FilmProvider $filmProvider, EntityManagerInterface $entityManager)
     {
         $this->formFactory = $formFactory;
         $this->filmRepository = $filmRepository;
         $this->filmProvider = $filmProvider;
+        $this->entityManager = $entityManager;
     }
 
     public function __invoke(Request $request, ?string $bookId = null): array
@@ -42,7 +45,7 @@ class FilmFormProcessor
         if ($bookId === null) {
             $filmDto = FilmDataModel::createEmpty();
         } else {
-            $film = $this->filmProvider->getById($bookId);
+            $film = $this->filmProvider->getByIdString($bookId);
             $filmDto = FilmDataModel::createFromFilm($film);
         }
 
@@ -63,7 +66,10 @@ class FilmFormProcessor
             $this->postUpdate($film, $filmDto);
         }
 
-        $this->filmRepository->save($film);
+//        $this->filmRepository->save($film);
+
+        $this->entityManager->persist($film);
+        $this->entityManager->flush();
 
         return [$film, null];
     }

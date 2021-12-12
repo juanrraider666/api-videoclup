@@ -19,6 +19,17 @@ class FilmOwnerRelationRepository extends ServiceEntityRepository
         parent::__construct($registry, FilmOwnerRelation::class);
     }
 
+    public function getQuantityPointsUser($user) {
+        return $this->createQueryBuilder('f')
+            ->select(['SUM(f.pointValue)'])
+            ->andWhere('f.owner = :owner')
+            ->setParameter('owner', $user)
+            ->orderBy('f.id', 'ASC')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
     // /**
     //  * @return FilmOwnerRelation[] Returns an array of FilmOwnerRelation objects
     //  */

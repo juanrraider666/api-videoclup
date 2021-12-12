@@ -46,7 +46,7 @@ trait TimeStampableEntity
     }
 
     /**
-     * @return DateTimeInterface
+     * @return DateTimeInterface|null
      */
     public function getDeletedAt(): ?DateTimeInterface
     {
