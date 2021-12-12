@@ -136,7 +136,7 @@ class Film
         return $this;
     }
 
-    public static function create($title, $description, $price): Film
+    public static function create(string $title, string $description, ?int $price): Film
     {
         $film = new self();
         $film->setTitle($title);
