@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,6 +26,14 @@ abstract class ApiUtilityController extends AbstractController
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
+    }
+
+    public function addFlashCustom($message, $positiveNotice = true)
+    {
+        /** @var Request $request */
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $noticeKey = $positiveNotice ? 'notice_happy' : 'notice_sad';
+        $request->getSession()->getFlashbag()->add($noticeKey, $message);
     }
 
     /**
@@ -48,6 +57,20 @@ abstract class ApiUtilityController extends AbstractController
         ]);
 
         return $response;
+    }
+
+    protected function createApiResponse($data, $statusCode = 200)
+    {
+        $json = $this->serialize($data);
+        return new Response($json, $statusCode, array(
+            'Content-Type' => 'application/json'
+        ));
+    }
+
+    protected function serialize($data, $format = 'json')
+    {
+        return $this->container->get('jms_serializer')
+            ->serialize($data, $format);
     }
 
     /**

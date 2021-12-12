@@ -51,7 +51,8 @@ class FilmController extends ApiUtilityController
     public function postRent($user, $film, int $count, int $days, FilmProvider $filmProvider, RentalFilmHandler $handler)
     {
         $owner = $this->getEntityManager()->find(User::class, $user);
-        $handler->rental($owner, $film, $count, $days);
+        $totalQuantity = $handler->rental($owner, $film, $count, $days);
+        return $this->createApiResponse(['total' => $totalQuantity]);
     }
 
 

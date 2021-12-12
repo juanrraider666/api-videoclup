@@ -8,6 +8,7 @@ use App\Entity\Film;
 use App\Entity\FilmOwnerRelation;
 use App\Entity\FilmType;
 use App\Provider\FilmProvider;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RentalFilmHandler
 {
@@ -15,19 +16,17 @@ class RentalFilmHandler
      * @var FilmProvider
      */
     private $filmProvider;
+    private $entityManager;
 
-    public function __construct(FilmProvider $filmProvider)
+    public function __construct(FilmProvider $filmProvider, EntityManagerInterface $entityManager)
     {
         $this->filmProvider = $filmProvider;
+        $this->entityManager = $entityManager;
     }
 
 
     public function rental($user, $filmId, $countFilms = 1, $days = 1)
     {
-        /**
-         3 peliculas x 3 dias
-         */
-
         $films = [];
         $quantityPrice = 0;
 
@@ -36,19 +35,28 @@ class RentalFilmHandler
             $originFilm = $this->filmProvider->getById($filmId);
             $filmType = $originFilm->getFilmType();
 
-            if($filmType == FilmType::NEW_RELEASE_TYPE) {
-                $quantityPrice += $originFilm->getPrice();
-            }
-
-            if($filmType == FilmType::NORMAL_TYPE) {
-                $quantityPrice += $originFilm->getPrice();
-            }
-
             $quantityPrice += $originFilm->getPrice();
+
+            /*if ($filmType->getId() == FilmType::NEW_RELEASE_TYPE && $days > $filmType->getValidDays()) {
+                $daySum = $days - $filmType->getValidDays();
+                $quantityPrice += $originFilm->getPrice() * $daySum;
+            }
+            */
+
+            $filmOwnerRelation = new FilmOwnerRelation(
+                $originFilm,
+                $user,
+                $originFilm->getFilmType()->getPoint()
+            );
+
+            $this->entityManager->persist($filmOwnerRelation);
+
             $films[] = $originFilm;
         }
 
        $totalPrice = $quantityPrice * $days;
+
+        return $totalPrice;
 
     }
 }

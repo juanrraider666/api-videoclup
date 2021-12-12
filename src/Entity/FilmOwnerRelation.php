@@ -43,11 +43,25 @@ class FilmOwnerRelation
      */
     private $pointValue;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $rentStartDay;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $rentEndDay;
+
+
     public function __construct(Film $filmListings, User $owner, int $pointValue)
     {
         $this->filmListings = $filmListings;
         $this->owner = $owner;
         $this->pointValue = $pointValue;
+        $this->rentStartDay = new \DateTime('now');
     }
 
 
@@ -101,5 +115,46 @@ class FilmOwnerRelation
         $this->pointValue = $pointValue;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getRentStartDay(): \DateTime
+    {
+        return $this->rentStartDay;
+    }
+
+    /**
+     * @param \DateTime $rentStartDay
+     */
+    public function setRentStartDay(\DateTime $rentStartDay): void
+    {
+        $this->rentStartDay = $rentStartDay;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRentEndDay(): \DateTime
+    {
+        return $this->rentEndDay;
+    }
+
+    /**
+     * @param \DateTime $rentEndDay
+     */
+    public function setRentEndDay(\DateTime $rentEndDay): void
+    {
+        $this->rentEndDay = $rentEndDay;
+    }
+
+    public function markAsRentEndDay(\DateTime $date = null)
+    {
+        if(null == $date) {
+            $this->setRentEndDay($date);
+        }else{
+            $this->rentEndDay = new \DateTime('now');
+        }
+
+    }
 
 }
