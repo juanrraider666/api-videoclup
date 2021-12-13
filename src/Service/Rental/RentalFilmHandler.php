@@ -46,7 +46,7 @@ class RentalFilmHandler
 
     }
 
-    private function rental(int $userId, int $filmId, int $countFilms, int $days): array
+    private function rental(int $userId, int $filmId, int $countFilms = 0, int $days = 0): array
     {
         $quantityPrice = 0;
         $user = $this->entityManager->find(User::class, $userId);
