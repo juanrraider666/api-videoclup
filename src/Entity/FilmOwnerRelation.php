@@ -33,13 +33,14 @@ class FilmOwnerRelation
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="filmOwnerRelation")
      * @ORM\JoinColumn(nullable=true)
-//     * @Groups({"film"})
+
      * @Assert\Valid()
      */
     private $owner;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"points"})
      */
     private $pointValue;
 

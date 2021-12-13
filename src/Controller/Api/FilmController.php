@@ -12,6 +12,7 @@ use App\Form\RentFilmType;
 use App\Provider\FilmProvider;
 use App\Repository\FilmOwnerRelationRepository;
 use App\Repository\FilmRepository;
+use App\Repository\UserRepository;
 use App\Service\Film\FilmFormProcessor;
 use App\Service\Rental\RentalFilmHandler;
 use Exception;
@@ -31,6 +32,22 @@ class FilmController extends ApiUtilityController
     public function list(FilmRepository $filmRepository)
     {
         return $filmRepository->findAll();
+    }
+
+    /**
+     * @Rest\Get(path="/films/user/points/{user}")
+     * @Rest\View(serializerGroups={"points"}, serializerEnableMaxDepthChecks=true)
+     */
+    public function getPointsUser(int $user, UserRepository $userRepository, FilmOwnerRelationRepository $filmOwnerRelationRepository)
+    {
+        $user = $userRepository->findOneBy(['id' => $user]);
+        if(!$user instanceof  User) {
+            return View::create('User not found', Response::HTTP_BAD_REQUEST);
+        }
+
+        $userPoints = $filmOwnerRelationRepository->getQuantityPointsUser($user);
+
+        return View::create(['userPoints' => $userPoints], Response::HTTP_BAD_REQUEST);
     }
 
     /**
