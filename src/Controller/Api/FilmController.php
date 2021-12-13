@@ -100,9 +100,9 @@ class FilmController extends ApiUtilityController
         FilmFormProcessor $formProcessor,
         Request $request
     ) {
-        [$book, $error] = ($formProcessor)($request);
-        $statusCode = $book ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST;
-        $data = $book ?? $error;
+        [$film, $error] = ($formProcessor)($request);
+        $statusCode = $film ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST;
+        $data = $film ?? $error;
         return View::create($data, $statusCode);
     }
 }

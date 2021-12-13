@@ -38,14 +38,14 @@ class FilmFormProcessor
         $this->entityManager = $entityManager;
     }
 
-    public function __invoke(Request $request, ?string $bookId = null): array
+    public function __invoke(Request $request, ?string $filmId = null): array
     {
         $film = null;
 
-        if ($bookId === null) {
+        if ($filmId === null) {
             $filmDto = FilmDataModel::createEmpty();
         } else {
-            $film = $this->filmProvider->getByIdString($bookId);
+            $film = $this->filmProvider->getByIdString($filmId);
             $filmDto = FilmDataModel::createFromFilm($film);
         }
 

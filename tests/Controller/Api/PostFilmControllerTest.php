@@ -12,7 +12,7 @@ class PostFilmControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             'POST',
-            '/api/books',
+            '/api/films',
             [],
             [],
             [
